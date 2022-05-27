@@ -1,9 +1,9 @@
 import React from 'react'
 import {useRef, useState, useEffect, useContext} from 'react';
-import AuthContext from './context/AuthProvider';
+import AuthContext from '../context/AuthProvider';
 
-import axios from './api/axios';
-const LOGIN_URL = '/auth';
+import axios from '../api/axios';
+const LOGIN_URL = '/api/v1/tasks';
 
 const Login = () => {
     const { setAuth} = useContext(AuthContext);
@@ -23,7 +23,7 @@ const Login = () => {
         setErrMsg('');
     }, [user, pwd])
 
-    const handleSubmit = async (e) => {
+    const handleAuth = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(LOGIN_URL, 
@@ -33,11 +33,10 @@ const Login = () => {
                     withCredentials: true,
                 }
             );
+
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
             setAuth({ user, pwd, roles, accessToken});
-            setUser('');
-            setPwd('');
             setSuccess(true)
         } catch (err) {
             if (!err?.response){
@@ -69,7 +68,7 @@ const Login = () => {
             ) : (
                 <section>
                 <p ref={errRef} className={errMsg? "errmsg" : "offscreen"} aria-live='assertive'>{errMsg}</p>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleAuth}>
                     <label htmlFor='username'>Tài khoản:</label>
                     <input 
                         type="text" 
@@ -91,7 +90,7 @@ const Login = () => {
                         value={pwd}
                         required
                     />
-                    <button type="submit">Đăng nhập</button>
+                    <button type="submit" onClick={()=>{console.log(success)}}>Đăng nhập</button>
                     <p class='no-account'>
                         Bạn chưa có tài khoản? 
                         <span className="line">
