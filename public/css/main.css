@@ -29,16 +29,16 @@ header {
   font-size: 1.5em;
 }
 
-header a {
+header a.logo {
   margin-left: 8em;
   color: #04AA6D;
 }
 
-header a span {
+header a.logo span {
   color: white;
 }
 
-header ul {
+header nav ul {
   margin-right: 10em;
   list-style: none;
   display: -webkit-box;
@@ -48,9 +48,11 @@ header ul {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  -webkit-column-gap: 4em;
+          column-gap: 4em;
 }
 
-header ul a {
+header nav ul a {
   color: #04AA6D;
   padding: 0.5em 0em;
 }
@@ -70,7 +72,7 @@ header ul a {
 
 .middle .intro {
   margin-left: 8em;
-  margin-top: 10em;
+  margin-top: 10.5em;
 }
 
 .middle .intro h1 {
@@ -86,8 +88,7 @@ header ul a {
   margin-top: 10em;
 }
 
-.middle .log-in input[type=text],
-.middle .log-in input[type=password] {
+.middle .log-in input[type=text], .middle .log-in input[type=password] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;

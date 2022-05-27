@@ -22,18 +22,20 @@ header {
     padding-bottom: 0.6em;
     background-color: #101010c4;
     font-size: 1.5em;
-    a {
+    a.logo {
         margin-left: 8em;
         color: #04AA6D;
         span {
             color: white;
         }
     }
-    ul {
+    nav ul {
         margin-right: 10em;
         list-style: none;
         display: flex;
         flex-direction: row;
+        column-gap: 4em;
+
         a {
             color: #04AA6D;
             padding: 0.5em 0em;
@@ -49,7 +51,7 @@ header {
 
     .intro {
         margin-left: 8em;
-        margin-top: 10em;
+        margin-top: 10.5em;
         
         h1 {
             color: #04AA6D;
@@ -64,8 +66,7 @@ header {
         margin-right: 10em;
         margin-top: 10em;
         
-        input[type=text],
-        input[type=password] {
+        input[type=text], input[type=password] {
             width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
