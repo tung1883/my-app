@@ -81,7 +81,7 @@ const Login = () => {
                         value={user}
                         required
                     />
-                    <label htmlFor='password'>Mật khẩu</label>
+                    <label htmlFor='password'>Mật khẩu:</label>
                     <input 
                         type="password" 
                         id='password' 
