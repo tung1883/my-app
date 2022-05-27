@@ -51,7 +51,7 @@ header {
 
     .intro {
         margin-left: 8em;
-        margin-top: 10.5em;
+        margin-top: 10em;
         
         h1 {
             color: #04AA6D;
@@ -85,11 +85,15 @@ header {
             width: 100%;
         }
 
-        p {
+        p.no-account {
             padding-top: 1em;
             a {
                 color: #04AA6D;
             }
+        }
+
+        section.login-success p a {
+            color: #04AA6D;
         }
 }
 }

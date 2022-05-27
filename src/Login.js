@@ -59,11 +59,11 @@ const Login = () => {
     return (
         <>
             {success ? (
-                <section>
+                <section class='login-success'>
                     <h1>Đăng nhập thành công!</h1>
                     <br />
                     <p>
-                        <a href="#">Quay lại trang chủ</a>
+                        <a href="#" onClick={() => setSuccess(false)}>Quay lại trang chủ</a>
                     </p>
                 </section>
             ) : (
@@ -92,7 +92,7 @@ const Login = () => {
                         required
                     />
                     <button type="submit">Đăng nhập</button>
-                    <p>
+                    <p class='no-account'>
                         Bạn chưa có tài khoản? 
                         <span className="line">
                             {/* put router link here */}
