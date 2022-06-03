@@ -1,21 +1,41 @@
 import './App.css'
 import Login from './components/Login';
+import Register from './components/Register';
 import Header from './components/Header';
+import Home from './components/Home';
+import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
+import { Routes, Route} from "react-router-dom"
+import useAuth from './hooks/useAuth';
 
 function App() {
+  const { auth } = useAuth();
+  console.log(auth.user);
   return (
-    <main className = 'container'>
-      <Header/>
-      <div className="middle">
-        <section class="intro">
-          <h1>Trang web quản lý cơ sở thực phẩm hàng đầu</h1>
-          <p>Tiện lợi, nhanh chóng, linh hoạt</p>
-        </section>
-        <section className='log-in'>
-          <Login/>
-        </section>
+    <div className="container">
+      <Header />
+      <div className="container">
+        <Routes>
+          <Route path='/' element={<Layout />}>
+            {/* Public routes */}
+            <Route path='/' element={<Home />} />
+            <Route path='/login' className='loginRoute' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+
+            {/* Protect routes */}
+            {/* <Route path='/admin' element={<Admin />} /> */}
+            {/* <Route path='/user' element={<User />} /> */}
+
+            <Route element={<RequireAuth />}>
+              
+            </Route>
+
+            {/* Catch all */}
+            {/* <Route path='/*' element={<Missing />} />> */}
+          </Route>
+        </Routes>
       </div>
-    </main>
+    </div>
   )
 }
 

@@ -1,74 +1,64 @@
 import React from 'react'
-import {useRef, useState, useEffect, useContext} from 'react';
-import AuthContext from '../context/AuthProvider';
-
+import {useRef, useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import useAuth from '../hooks/useAuth';
+import { Navigate } from 'react-router-dom';
 import axios from '../api/axios';
-const LOGIN_URL = '/api/v1/tasks';
+const LOGIN_URL = '/api/v1/tasks/login';
 
 const Login = () => {
-    const { setAuth} = useContext(AuthContext);
+    const { auth, setAuth } = useAuth();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location?.state?.from?.pathname || "/";
+
     const userRef = useRef();
     const errRef = useRef();
 
     const [user, setUser] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         userRef.current.focus();
     }, [])
 
-    useEffect(() => {
-        setErrMsg('');
-    }, [user, pwd])
-
     const handleAuth = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(LOGIN_URL, 
-                JSON.stringify({user, pwd}),
-                {
-                    headers: {'Content-Type': 'application/json'},
-                    withCredentials: true,
-                }
+                { user: user, password: pwd }
             );
-
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({ user, pwd, roles, accessToken});
-            setSuccess(true)
+            /*const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles; */
+            setAuth({ user, pwd }); 
+            setUser('');
+            setPwd('');
+            navigate(from, { replace: true});
         } catch (err) {
             if (!err?.response){
-                setErrMsg('No server response!');
-            } else if (err.reponse?.status === 400) {
-                setErrMsg('Missing username or password');   
-            } else if (err.reponse?.status === 401) {
-                setErrMsg('Unauthorized User');   
+                setErrMsg('Không nhận được phản hồi từ server!');
+            } else if (err.response?.status === 400) {
+                setErrMsg('Tài khoản hoặc mất khẩu không đúng');   
+            } else if (err.response?.status === 401) {
+                setErrMsg('Người dùng không được cấp phép');   
             } else {
-                setErrMsg('Login failed');
+                setErrMsg('Đăng nhập không thành công');
             }
-            errRef.current.focus();
         }
-        setUser('');
-        setPwd('');
-        setSuccess(true)
     }
 
     return (
-        <>
-            {success ? (
-                <section class='login-success'>
-                    <h1>Đăng nhập thành công!</h1>
-                    <br />
-                    <p>
-                        <a href="#" onClick={() => setSuccess(false)}>Quay lại trang chủ</a>
-                    </p>
-                </section>
-            ) : (
-                <section>
-                <p ref={errRef} className={errMsg? "errmsg" : "offscreen"} aria-live='assertive'>{errMsg}</p>
-                <form onSubmit={handleAuth}>
+        auth.user ? (
+            <Navigate to="/" state={{ from:location}} replace /> 
+        ) : (
+            <section>
+                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+                    {errMsg}
+                </p>
+
+                <form className='log-in' onSubmit={handleAuth}>
                     <label htmlFor='username'>Tài khoản:</label>
                     <input 
                         type="text" 
@@ -90,7 +80,7 @@ const Login = () => {
                         value={pwd}
                         required
                     />
-                    <button type="submit" onClick={()=>{console.log(success)}}>Đăng nhập</button>
+                    <button type="submit">Đăng nhập</button>
                     <p class='no-account'>
                         Bạn chưa có tài khoản? 
                         <span className="line">
@@ -100,8 +90,7 @@ const Login = () => {
                     </p>
                 </form>
             </section>
-            )}
-        </>
+        )
     )
 }
 
