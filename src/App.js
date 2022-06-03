@@ -1,5 +1,5 @@
 import './App.css'
-import Login from './components/Login';
+import Login from './components/login/Login';
 import Register from './components/Register';
 import Header from './components/Header';
 import Home from './components/Home';
@@ -10,7 +10,6 @@ import useAuth from './hooks/useAuth';
 
 function App() {
   const { auth } = useAuth();
-  console.log(auth.user);
   return (
     <div className="container">
       <Header />

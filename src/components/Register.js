@@ -53,6 +53,7 @@ const Register = () => {
                 { username: user, password: pwd }
             )
             setErrMsg(response.data.message);
+            console.log(errMsg);
             setUser('');
             setPwd('');
             setMatchPwd('');

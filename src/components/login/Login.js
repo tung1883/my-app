@@ -1,10 +1,11 @@
 import React from 'react'
 import {useRef, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
-import axios from '../api/axios';
-const LOGIN_URL = '/api/v1/tasks/login';
+import axios from '../../api/axios';
+import "./login.css"
+const LOGIN_URL = '/auth/login';
 
 const Login = () => {
     const { auth, setAuth } = useAuth();
@@ -14,37 +15,37 @@ const Login = () => {
     const from = location?.state?.from?.pathname || "/";
 
     const userRef = useRef();
-    const errRef = useRef();
+    const msgRef = useRef();
 
     const [user, setUser] = useState('');
     const [pwd, setPwd] = useState('');
-    const [errMsg, setErrMsg] = useState('');
+    const [msg, setMsg] = useState('');
 
     useEffect(() => {
         userRef.current.focus();
     }, [])
 
     const handleAuth = async (e) => {
+        console.log(msg);
         e.preventDefault();
         try {
             const response = await axios.post(LOGIN_URL, 
-                { user: user, password: pwd }
+                { username: user, password: pwd }
             );
+
             /*const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles; */
             setAuth({ user, pwd }); 
             setUser('');
             setPwd('');
             navigate(from, { replace: true});
-        } catch (err) {
+        } catch (err) {;
             if (!err?.response){
-                setErrMsg('Không nhận được phản hồi từ server!');
-            } else if (err.response?.status === 400) {
-                setErrMsg('Tài khoản hoặc mất khẩu không đúng');   
-            } else if (err.response?.status === 401) {
-                setErrMsg('Người dùng không được cấp phép');   
+                setMsg('Không nhận được phản hồi từ server!');
+            } else if (err.response?.status) {
+                setMsg(err.response.data.message); 
             } else {
-                setErrMsg('Đăng nhập không thành công');
+                setMsg('Đăng nhập không thành công');
             }
         }
     }
@@ -54,10 +55,6 @@ const Login = () => {
             <Navigate to="/" state={{ from:location}} replace /> 
         ) : (
             <section>
-                <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
-                    {errMsg}
-                </p>
-
                 <form className='log-in' onSubmit={handleAuth}>
                     <label htmlFor='username'>Tài khoản:</label>
                     <input 
@@ -80,6 +77,9 @@ const Login = () => {
                         value={pwd}
                         required
                     />
+                    <p ref={msgRef} className={msg ? "msg" : "offscreen"} aria-live="assertive">
+                        {msg}
+                    </p>
                     <button type="submit">Đăng nhập</button>
                     <p class='no-account'>
                         Bạn chưa có tài khoản? 
