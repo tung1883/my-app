@@ -1,6 +1,6 @@
 import './App.css'
 import Login from './components/login/Login';
-import Register from './components/Register';
+import Register from './components/register/Register';
 import Header from './components/Header';
 import Home from './components/Home';
 import Layout from './components/Layout';
@@ -18,7 +18,7 @@ function App() {
           <Route path='/' element={<Layout />}>
             {/* Public routes */}
             <Route path='/' element={<Home />} />
-            <Route path='/login' className='loginRoute' element={<Login />} />
+            <Route path='/login' className='loginRoute' element={<Home />} />
             <Route path='/register' element={<Register />} />
 
             {/* Protect routes */}

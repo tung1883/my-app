@@ -1,6 +1,5 @@
 import useAuth from "../hooks/useAuth"
 import Login from "./login/Login";
-import Register from "./Register";
 
 const Home = () => {
     const { auth } = useAuth();

@@ -1,7 +1,7 @@
-import "../css/Register.css"
+import "./Register.css"
 import React from 'react';
 import { useRef, useState, useEffect } from "react";
-import axios from "../api/axios";
+import axios from '../../api/axios';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -9,7 +9,7 @@ const REGISTER_URL = '/admin/accounts';
  
 const Register = () => {
     const userRef = useRef();
-    const errRef = useRef();
+    const msgRef = useRef();
 
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
@@ -23,7 +23,7 @@ const Register = () => {
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
-    const [errMsg, setErrMsg] = useState('');
+    const [msg, setMsg] = useState('');
 
     useEffect(() => {
         userRef.current.focus();
@@ -42,44 +42,57 @@ const Register = () => {
     }, [pwd, matchPwd])
 
     useEffect(()=> {
-        setErrMsg('');
+        setMsg('');
     }, [user, pwd, matchPwd])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post(
-                REGISTER_URL,
-                { username: user, password: pwd }
-            )
-            setErrMsg(response.data.message);
-            console.log(errMsg);
-            setUser('');
-            setPwd('');
-            setMatchPwd('');
-        } 
-        catch (err) {
-            if (!err?.response){
-                setErrMsg("Không nhận được phản hồi từ server");
-            } else if (err.response?.status === 409){
-                setErrMsg('Tên đăng nhập đã tồn tại');
-            } else {
-                setErrMsg("Đăng ký không thành công");
+        if (!validName || !validPwd || !validMatch){
+            setMsg('Thông tin đăng nhập không hợp lệ')
+        }
+        else {
+            try {
+                const response = await axios.post(
+                    REGISTER_URL,
+                    { username: user, password: pwd }
+                )
+                setMsg("Đăng ký thành công!");
+                setUser('');
+                setPwd('');
+                setMatchPwd('');
+            } 
+            catch (err) {
+                if (!err?.response){
+                    setMsg("Không nhận được phản hồi từ server");
+                } else {
+                    setMsg("Đăng ký không thành công");
+                }
             }
         }
     }   
 
-    return (
-        <section>
-            <p className="registerHeader">Đăng ký</p>
+    const onChangeHandler = (e) => {
+        setMsg('');
+        if (e.target.name === 'username'){
+            setUser(e.target.value);
+        }
+        if (e.target.name === 'password'){
+            setPwd(e.target.value);
+        }
+        if (e.target.name === 'matchPassword'){
+            setMatchPwd(e.target.value);
+        }
+    }
 
-            {/*Error Message */}
-{/* {            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
-                {errMsg}
-            </p>} */}
-            <p>{errMsg}</p>
-            
-            <form onSubmit={handleSubmit}>
+    return (
+        <section className="middle">
+            <section className="intro">
+                <h1>Tạo tài khoản cho chuyên viên của bạn</h1>
+              </section>
+
+            <form className ='register' onSubmit={handleSubmit}>
+                <h1 className="registerHeader">Đăng ký</h1>
+
                 {/*Username*/}
                 <label htmlFor='username'>Tài khoản:</label>
                 <input 
@@ -88,7 +101,8 @@ const Register = () => {
                     placeholder='Nhập tài khoản' 
                     ref={userRef} 
                     autoComplete='off'
-                    onChange={(e) => setUser(e.target.value)}
+                    name='username'
+                    onChange={(e) => onChangeHandler(e)}
                     value={user}
                     aria-invalid={ validName ? "false" : "true"}
                     aria-describedby="uidnote"
@@ -109,7 +123,8 @@ const Register = () => {
                     id='password' 
                     placeholder='Nhập mật khẩu' 
                     autoComplete='off'
-                    onChange={(e) => setPwd(e.target.value)}
+                    name='password'
+                    onChange={(e) => onChangeHandler(e)}
                     value={pwd}
                     aria-invalid={ validPwd ? "false" : "true"}
                     aria-describedby="pwdnote"
@@ -130,7 +145,8 @@ const Register = () => {
                     id='confirm_pwd' 
                     placeholder='Nhập lại mật khẩu' 
                     autoComplete='off'
-                    onChange={(e) => setMatchPwd(e.target.value)}
+                    name='matchPassword'
+                    onChange={(e) => onChangeHandler(e)}
                     value={matchPwd}
                     aria-invalid={ validMatch ? "false" : "true"}
                     aria-describedby="confirmnote"
@@ -142,16 +158,13 @@ const Register = () => {
                     Mật khẩu không khớp, xin vui lòng nhập lại
                 </p>
 
-                <button type="submit" disabled={!validName || !validPwd || !validMatch ? true : false}>Đăng ký</button>
-            </form>
-
-            <p class='already-account'>
-                    Bạn đã có tài khoản? 
-                    <span className="line">
-                        {/* put router link here */}
-                        <a href="#"> Đăng nhập ngay</a>
-                    </span>
+                <p ref={msgRef} className={msg ? "msg" : "offscreen"} aria-live="assertive">
+                    {msg}
                 </p>
+
+                <button type="submit">Đăng ký</button>
+
+            </form>
         </section>
     )
 }

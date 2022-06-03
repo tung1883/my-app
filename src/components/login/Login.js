@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from '../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import axios from '../../api/axios';
-import "./login.css"
+import "./Login.css"
 const LOGIN_URL = '/auth/login';
 
 const Login = () => {
@@ -26,7 +26,6 @@ const Login = () => {
     }, [])
 
     const handleAuth = async (e) => {
-        console.log(msg);
         e.preventDefault();
         try {
             const response = await axios.post(LOGIN_URL, 
@@ -50,12 +49,22 @@ const Login = () => {
         }
     }
 
+    const onChangeHandler = (e) => {
+        setMsg('');
+        if (e.target.name === 'username'){
+            setUser(e.target.value);
+        } else {
+            setPwd(e.target.value);
+        }
+    }
+
     return (
         auth.user ? (
             <Navigate to="/" state={{ from:location}} replace /> 
         ) : (
             <section>
                 <form className='log-in' onSubmit={handleAuth}>
+                    <h1 className='loginHeader'>Đăng nhập</h1>
                     <label htmlFor='username'>Tài khoản:</label>
                     <input 
                         type="text" 
@@ -63,8 +72,11 @@ const Login = () => {
                         placeholder='Nhập tài khoản' 
                         ref={userRef} 
                         autoComplete='off'
-                        onChange={(e) => setUser(e.target.value)}
+                        onChange={(e) => {
+                            onChangeHandler(e);
+                        }}
                         value={user}
+                        name='username'
                         required
                     />
                     <label htmlFor='password'>Mật khẩu:</label>
@@ -73,21 +85,17 @@ const Login = () => {
                         id='password' 
                         placeholder='Nhập mật khẩu' 
                         autoComplete='off'
-                        onChange={(e) => setPwd(e.target.value)}
+                        onChange={(e) => {
+                            onChangeHandler(e);
+                        }}
                         value={pwd}
+                        name='password'
                         required
                     />
                     <p ref={msgRef} className={msg ? "msg" : "offscreen"} aria-live="assertive">
                         {msg}
                     </p>
                     <button type="submit">Đăng nhập</button>
-                    <p class='no-account'>
-                        Bạn chưa có tài khoản? 
-                        <span className="line">
-                            {/* put router link here */}
-                            <a href="#"> Đăng ký ngay</a>
-                        </span>
-                    </p>
                 </form>
             </section>
         )

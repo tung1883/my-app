@@ -1,22 +1,22 @@
-.log-in {
+.register {
   width: 35em;
   margin-right: 10em;
   margin-top: 10em;
 }
 
-.log-in .loginHeader {
+.register .registerHeader {
   font-size: 1.5rem;
   padding-bottom: 1rem;
 }
 
-.log-in .msg {
+.register .msg {
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
   color: red;
 }
 
-.log-in input[type=text],
-.log-in input[type=password] {
+.register input[type=text],
+.register input[type=password] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -26,7 +26,7 @@
           box-sizing: border-box;
 }
 
-.log-in button {
+.register button {
   background-color: #04AA6D;
   color: white;
   padding: 14px 20px;
@@ -36,15 +36,20 @@
   width: 100%;
 }
 
-.log-in p.no-account {
-  padding-top: 1em;
+.register .offscreen {
+  display: none;
 }
 
-.log-in p.no-account a {
+.register .already-account {
+  padding-top: 1rem;
+}
+
+.register .already-account a {
   color: #04AA6D;
 }
 
-.log-in section.login-success p a {
-  color: #04AA6D;
+.register .instructions {
+  color: red;
+  padding-bottom: 1rem;
 }
-/*# sourceMappingURL=login.css.map */
+/*# sourceMappingURL=Register.css.map */
